@@ -1,195 +1,311 @@
 <template>
   <div>
     <v-row justify="center">
-      <v-expansion-panels accordion :value="0">
+      <v-expansion-panels :value="0">
         <v-expansion-panel
           v-for="(app, index) in containers"
           :key="'app-' + index"
         >
           <v-expansion-panel-header color="secondary">
-            <v-row no-gutters>
+            <v-row no-gutters style="max-height: 20px;">
               <v-col cols="1"
                 ><v-btn icon color="red" x-small @click="removeApp(index)"
                   ><v-icon>mdi-minus</v-icon></v-btn
                 >
               </v-col>
+              <v-col cols="1" v-if="app.logo">
+                <img style="max-height: 20px;" :src="app.logo" />
+              </v-col>
               <v-col cols="1">{{ app.name || "App " + index }}</v-col>
-              <v-col cols="4" class="text--secondary">
+              <v-col cols="2" class="text--secondary">
                 ({{ app.image || "No Image" }})
               </v-col>
             </v-row>
           </v-expansion-panel-header>
           <v-expansion-panel-content color="secondary">
             <!--  ### General Section ###  -->
-            <h2>General</h2>
-            <v-text-field
-              label="Name"
-              placeholder="Yacht"
-              v-model="app.name"
-              required
-            />
+            <v-expansion-panels>
+              <v-expansion-panel>
+                <v-expansion-panel-header>
+                  <v-row no-gutters>
+                    <v-col cols="2">
+                      General
+                    </v-col>
+                    <v-col cols="1" class="text--secondary">
+                      {{ app.title || app.name }}
+                    </v-col>
+                    <v-col cols="3" class="text--secondary">
+                      {{ app.image }}
+                    </v-col>
+                    <v-col cols="3" v-if="app.restart_policy">
+                      restart: {{ app.restart_policy }}
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-text-field
+                    label="Title"
+                    placeholder="Yacht"
+                    v-model="app.title"
+                    required
+                  />
 
-            <v-text-field
-              label="Image"
-              placeholder="selfhostedpro/yacht"
-              v-model="app.image"
-              required
-            />
+                  <v-text-field
+                    label="Name"
+                    placeholder="yacht"
+                    v-model="app.name"
+                    required
+                  />
 
-            <v-select
-              :items="['always', 'on-failure', 'unless-stopped']"
-              label="Restart Policy"
-              v-model="app['restart_policy']"
-              required
-            />
-            <!--  ### Networking Section ###  -->
-            <h2>Networking</h2>
-            <v-select
-              :items="network_modes"
-              label="Network Mode"
-              clearable
-              v-model="app.network_mode"
-              :disabled="app.network !== undefined"
-            />
-            <h3 class="text-center">
-              Ports <br />
-              <v-btn
-                fab
-                elevation="0"
-                color="primary"
-                x-small
-                @click="addPort(index)"
-                ><v-icon>mdi-plus</v-icon></v-btn
-              >
-            </h3>
+                  <v-text-field
+                    label="Image"
+                    placeholder="selfhostedpro/yacht"
+                    v-model="app.image"
+                    required
+                  />
+                  <v-text-field
+                    label="Logo"
+                    placeholder="https://ycht.tech/assets/images/logo.svg"
+                    v-model="app.logo"
+                    required
+                  />
 
-            <v-row
-              v-for="(port, port_index) in app.ports"
-              :key="'port-' + port_index"
-            >
-              <v-col cols="1">
-                <v-btn
-                  class="removeButton ml-5"
-                  icon
-                  @click="removePort(index, port_index)"
-                  ><v-icon>mdi-minus</v-icon></v-btn
-                >
-              </v-col>
-              <v-col>
-                <v-text-field
-                  type="string"
-                  label="Label"
-                  placeholder="WebUI"
-                  v-model="port['label']"
-                />
-              </v-col>
-              <v-col>
-                <v-text-field
-                  type="number"
-                  label="Host"
-                  placeholder="80"
-                  min="0"
-                  max="65535"
-                  v-model="port['hport']"
-                />
-              </v-col>
-              <v-col>
-                <v-text-field
-                  type="number"
-                  label="Container"
-                  placeholder="80"
-                  min="0"
-                  max="65535"
-                  v-model="port['cport']"
-                  required
-                />
-              </v-col>
-              <v-col>
-                <v-select
-                  :items="['tcp', 'udp']"
-                  label="Protocol"
-                  v-model="port['proto']"
-                  required
-                />
-              </v-col>
-            </v-row>
-            <!--  ### Storoage Section ###  -->
-            <h2>Storage</h2>
-            <h3 class="text-center">
-              Volumes <br />
-              <v-btn
-                fab
-                elevation="0"
-                color="primary"
-                x-small
-                @click="addVolume(index)"
-                ><v-icon>mdi-plus</v-icon></v-btn
-              >
-            </h3>
-            <v-row
-              v-for="(volume, volume_index) in app.volumes"
-              :key="'volume-' + volume_index"
-            >
-              <v-col cols="1">
-                <v-btn
-                  class="removeButton ml-5"
-                  icon
-                  @click="removeVolume(index, volume_index)"
-                  ><v-icon>mdi-minus</v-icon></v-btn
-                >
-              </v-col>
-              <v-col>
-                <v-text-field
-                  label="Host"
-                  placeholder="/yacht/image/share"
-                  v-model="volume['bind']"
-                  required
-                />
-              </v-col>
-              <v-col>
-                <v-text-field
-                  label="Container"
-                  placeholder="/share"
-                  v-model="volume['container']"
-                  required
-                />
-              </v-col>
-            </v-row>
-            <!--  ### Environment Section ###  -->
-            <h2>Environment</h2>
-            <h3 class="text-center">
-              Environment Variables <br />
-              <v-btn
-                fab
-                elevation="0"
-                color="primary"
-                x-small
-                @click="addEnv(index)"
-                ><v-icon>mdi-plus</v-icon></v-btn
-              >
-            </h3>
-            <v-row
-              v-for="(env, env_index) in app.env"
-              :key="'env-' + env_index"
-            >
-              <v-col cols="1">
-                <v-btn
-                  class="removeButton ml-5"
-                  icon
-                  @click="removeEnv(index, env_index)"
-                  ><v-icon>mdi-minus</v-icon></v-btn
-                >
-              </v-col>
-              <v-col>
-                <v-text-field label="label" v-model="env['label']" required />
-              </v-col>
-              <v-col>
-                <v-text-field label="Name" v-model="env['name']" required />
-              </v-col>
-              <v-col>
-                <v-text-field label="Value" v-model="env['default']" required />
-              </v-col>
-            </v-row>
+                  <v-select
+                    :items="['always', 'on-failure', 'unless-stopped']"
+                    label="Restart Policy"
+                    v-model="app['restart_policy']"
+                    required
+                  />
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <v-expansion-panel>
+                <!--  ### Networking Section ###  -->
+                <v-expansion-panel-header>
+                  <v-row no-gutters>
+                    <v-col cols="2">
+                      Networking
+                    </v-col>
+                    <v-col cols="1" class="text--secondary">
+                      {{ app.network_mode }}
+                    </v-col>
+                    <v-col
+                      v-for="(port_label, port_label_index) in app.ports"
+                      :key="port_label_index"
+                      cols="1"
+                      class="text--secondary"
+                    >
+                      {{ port_label.label || port_label.hport }}
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-select
+                    :items="network_modes"
+                    label="Network Mode"
+                    clearable
+                    v-model="app.network_mode"
+                    :disabled="app.network !== undefined"
+                  />
+                  <h3 class="text-center">
+                    Ports <br />
+                    <v-btn
+                      fab
+                      elevation="0"
+                      color="primary"
+                      x-small
+                      @click="addPort(index)"
+                      ><v-icon>mdi-plus</v-icon></v-btn
+                    >
+                  </h3>
+
+                  <v-row
+                    v-for="(port, port_index) in app.ports"
+                    :key="'port-' + port_index"
+                  >
+                    <v-col cols="1">
+                      <v-btn
+                        class="removeButton ml-5"
+                        icon
+                        @click="removePort(index, port_index)"
+                        ><v-icon>mdi-minus</v-icon></v-btn
+                      >
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        type="string"
+                        label="Label"
+                        placeholder="WebUI"
+                        v-model="port['label']"
+                      />
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        type="number"
+                        label="Host"
+                        min="0"
+                        max="65535"
+                        v-model="port['hport']"
+                      />
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        type="number"
+                        label="Container"
+                        placeholder="80"
+                        min="0"
+                        max="65535"
+                        v-model="port['cport']"
+                        required
+                      />
+                    </v-col>
+                    <v-col>
+                      <v-select
+                        :items="['tcp', 'udp']"
+                        label="Protocol"
+                        v-model="port['proto']"
+                        required
+                      />
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <!--  ### Storage Section ###  -->
+              <v-expansion-panel>
+                <v-expansion-panel-header>
+                 <v-row no-gutters>
+                    <v-col cols="2">
+                      Storage
+                    </v-col>
+                    <v-col cols="2" class="text--secondary" v-if="app.volumes.length > 0">
+                       {{ 'Volumes: '+app.volumes.length }}
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <h3 class="text-center">
+                    Volumes <br />
+                    <v-btn
+                      fab
+                      elevation="0"
+                      color="primary"
+                      x-small
+                      @click="addVolume(index)"
+                      ><v-icon>mdi-plus</v-icon></v-btn
+                    >
+                  </h3>
+                  <v-row
+                    v-for="(volume, volume_index) in app.volumes"
+                    :key="'volume-' + volume_index"
+                  >
+                    <v-col cols="1">
+                      <v-btn
+                        class="removeButton ml-5"
+                        icon
+                        @click="removeVolume(index, volume_index)"
+                        ><v-icon>mdi-minus</v-icon></v-btn
+                      >
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        label="Variable"
+                        placeholder="!config"
+                        v-model="volume['variable']"
+                        required
+                      />
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        label="Host"
+                        placeholder="/yacht/image/share"
+                        v-model="volume['bind']"
+                        required
+                      />
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        label="Container"
+                        placeholder="/share"
+                        v-model="volume['container']"
+                        required
+                      />
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <!--  ### Environment Section ###  -->
+              <v-expansion-panel>
+                <v-expansion-panel-header>
+                 <v-row no-gutters>
+                    <v-col cols="2">
+                      Environment
+                    </v-col>
+                    <v-col cols="3" class="text--secondary" v-if="app.env.length > 0">
+                       {{ 'Environment Variables: '+app.env.length }}
+                    </v-col>
+                  </v-row>                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <h3 class="text-center">
+                    Environment Variables <br />
+                    <v-btn
+                      fab
+                      elevation="0"
+                      color="primary"
+                      x-small
+                      @click="addEnv(index)"
+                      ><v-icon>mdi-plus</v-icon></v-btn
+                    >
+                  </h3>
+                  <v-row
+                    v-for="(env, env_index) in app.env"
+                    :key="'env-' + env_index"
+                  >
+                    <v-col cols="1">
+                      <v-btn
+                        class="removeButton ml-5"
+                        icon
+                        @click="removeEnv(index, env_index)"
+                        ><v-icon>mdi-minus</v-icon></v-btn
+                      >
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        label="Description"
+                        v-model="env['description']"
+                      />
+                    </v-col>
+                    <v-col>
+                      <v-text-field label="Label" v-model="env['label']" />
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        label="Name"
+                        v-model="env['name']"
+                        required
+                      />
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        label="Value"
+                        v-model="env['default']"
+                        required
+                      />
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <v-expansion-panel>
+                <v-expansion-panel-header>
+                                   <v-row no-gutters>
+                    <v-col cols="2">
+                      Advanced
+                    </v-col>
+                    <v-col cols="2" class="text--secondary" v-if="app.volumes.length > 0">
+                       {{ 'Volumes: '+app.volumes.length }}
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-header>
+              </v-expansion-panel>
+            </v-expansion-panels>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -207,6 +323,7 @@ export default {
       e6: 1,
       containers: [
         {
+          title: "",
           name: "",
           image: "",
           restart_policy: "",
@@ -252,6 +369,7 @@ export default {
       this.containers.push({
         name: "",
         image: "",
+        logo: "",
         restart_policy: "",
         ports: [],
         volumes: [],
@@ -310,5 +428,7 @@ export default {
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
-html {background-color: black}
+html {
+  background-color: black;
+}
 </style>
