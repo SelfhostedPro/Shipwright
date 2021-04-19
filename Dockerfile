@@ -21,8 +21,6 @@ RUN \
  apk add --no-cache \
 	nginx &&\
  echo "**** Cleaning Up ****" &&\
- apk del --purge \
-	build-dependencies && \
  rm -rf \
 	/root/.cache \
 	/tmp/*
