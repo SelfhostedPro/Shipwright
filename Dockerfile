@@ -29,6 +29,8 @@ RUN \
 COPY --from=build-stage /app/dist /app
 COPY nginx.conf /etc/nginx/
 
+COPY /root /
+
 # Expose
 VOLUME /config
 EXPOSE 8000
