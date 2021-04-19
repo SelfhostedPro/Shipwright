@@ -15,9 +15,6 @@ FROM lsiobase/alpine:3.12 as deploy-stage
 ENV PYTHONIOENCODING=UTF-8
 ENV THEME=Default
 
-WORKDIR /api
-COPY ./backend/requirements.txt .
-
 # Install Dependancies
 RUN \
  echo "**** install packages ****" && \
