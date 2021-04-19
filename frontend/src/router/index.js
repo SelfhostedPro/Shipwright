@@ -1,8 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import home from "../components/main/home.vue"
-import builder from "../components/builder/builder.vue"
+import home from "../components/main/home.vue";
+import builder from "../components/builder/builder.vue";
 
 Vue.use(VueRouter);
 
@@ -12,8 +12,8 @@ const routes = [
     component: Home,
     children: [
       {
-        path: '',
-        name: 'Home',
+        path: "",
+        name: "Home",
         component: home
       },
       {
