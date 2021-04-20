@@ -34,9 +34,12 @@ export function generateTemplate(templateObject) {
     yachtAppList.push(_templateObject.containers[app]);
   }
   let zip = new JSZip();
-  zip.file(_templateObject.title + "-yacht.json", JSON.stringify(yachtAppList, null, 2));
+  zip.file(
+    _templateObject.title + "-yacht.json",
+    JSON.stringify(yachtAppList, null, 2)
+  );
   zip.generateAsync({ type: "blob" }).then(function(content) {
-    FileSaver.saveAs(content, _templateObject.title+ ".zip");
+    FileSaver.saveAs(content, _templateObject.title + ".zip");
   });
 }
 

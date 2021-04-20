@@ -13,12 +13,7 @@
     <v-expansion-panel-content>
       <h3 class="text-center">
         Volumes <br />
-        <v-btn
-          fab
-          elevation="0"
-          color="primary"
-          x-small
-          @click="addVolume()"
+        <v-btn fab elevation="0" color="primary" x-small @click="addVolume()"
           ><v-icon>mdi-plus</v-icon></v-btn
         >
       </h3>
@@ -70,12 +65,12 @@ export default {
     addVolume() {
       this.app.volumes.push({
         container: "",
-        bind: "",
+        bind: ""
       });
     },
     removeVolume(volume_index) {
       this.app.volumes.splice(volume_index, 1);
-    },
-  },
+    }
+  }
 };
 </script>

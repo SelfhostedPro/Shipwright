@@ -19,10 +19,7 @@
       </h3>
       <v-row v-for="(env, env_index) in app.env" :key="'env-' + env_index">
         <v-col cols="1">
-          <v-btn
-            class="removeButton ml-5"
-            icon
-            @click="removeEnv(env_index)"
+          <v-btn class="removeButton ml-5" icon @click="removeEnv(env_index)"
             ><v-icon>mdi-minus</v-icon></v-btn
           >
         </v-col>
@@ -50,12 +47,12 @@ export default {
     addEnv() {
       this.app.env.push({
         name: "",
-        default: "",
+        default: ""
       });
     },
     removeEnv(env_index) {
       this.app.env.splice(env_index, 1);
-    },
-  },
+    }
+  }
 };
 </script>

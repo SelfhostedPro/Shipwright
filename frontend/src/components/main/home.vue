@@ -23,7 +23,11 @@
             <v-btn color="primary" class="mr-5" :to="{ name: 'builder' }">
               Get Started
             </v-btn>
-            <v-btn href="https://github.com/SelfhostedPro/Shipwright" target="_blank" class="ml-5">
+            <v-btn
+              href="https://github.com/SelfhostedPro/Shipwright"
+              target="_blank"
+              class="ml-5"
+            >
               View Source Code
             </v-btn>
           </v-col>

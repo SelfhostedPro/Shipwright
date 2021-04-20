@@ -1,10 +1,16 @@
 <template>
   <v-app-bar app elevate-on-scroll color="primary">
-      <v-img @click="$router.push('/')" :src="require('@/assets/logo.svg')" class="main-logo ml-5" />
-      <v-toolbar-title @click="$router.push('/')" class="app-title ml-2 font-weight-bold">
-        Shipwright</v-toolbar-title
-      >
-      
+    <v-img
+      @click="$router.push('/')"
+      :src="require('@/assets/logo.svg')"
+      class="main-logo ml-5"
+    />
+    <v-toolbar-title
+      @click="$router.push('/')"
+      class="app-title ml-2 font-weight-bold"
+    >
+      Shipwright</v-toolbar-title
+    >
   </v-app-bar>
 </template>
 
@@ -15,6 +21,6 @@
   cursor: pointer;
 }
 .app-title {
-    cursor: pointer;
+  cursor: pointer;
 }
 </style>

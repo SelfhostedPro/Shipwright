@@ -37,8 +37,20 @@
         v-model="app.image"
         required
       />
-      <v-textarea label="Description" v-model="app.description" clearable no-resize rows="2"/>
-      <v-combobox label="Categories" placeholder="Downloads" small-chips v-model="app.categories" multiple/>
+      <v-textarea
+        label="Description"
+        v-model="app.description"
+        clearable
+        no-resize
+        rows="2"
+      />
+      <v-combobox
+        label="Categories"
+        placeholder="Downloads"
+        small-chips
+        v-model="app.categories"
+        multiple
+      />
       <v-text-field
         label="Platform"
         placeholder="linux"
@@ -51,7 +63,13 @@
         v-model="app.logo"
         required
       />
-      <v-textarea label="Note" v-model="app.note" clearable no-resize rows="2"/>
+      <v-textarea
+        label="Note"
+        v-model="app.note"
+        clearable
+        no-resize
+        rows="2"
+      />
       <v-select
         :items="['always', 'on-failure', 'unless-stopped']"
         label="Restart Policy"
@@ -64,6 +82,6 @@
 
 <script>
 export default {
-    props: ["app"]
-}
+  props: ["app"]
+};
 </script>

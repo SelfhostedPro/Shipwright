@@ -3,7 +3,7 @@
     <TopBar />
     <v-main>
       <transition name="fade">
-      <router-view></router-view>
+        <router-view></router-view>
       </transition>
     </v-main>
   </v-app>
@@ -13,28 +13,29 @@
 import TopBar from "./components/layout/TopBar";
 export default {
   components: {
-    TopBar: TopBar,
+    TopBar: TopBar
   },
   name: "App",
 
   data: () => ({
     //
-  }),
+  })
 };
 </script>
 
 <style>
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition-property: opacity;
-  transition-duration: .25s;
+  transition-duration: 0.25s;
 }
 
 .fade-enter-active {
-  transition-delay: .25s;
+  transition-delay: 0.25s;
 }
 
-.fade-enter, .fade-leave-active {
-  opacity: 0
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
 }
-
 </style>

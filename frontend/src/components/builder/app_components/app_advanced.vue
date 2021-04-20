@@ -22,37 +22,37 @@
             </v-row>
           </v-expansion-panel-header>
           <v-expansion-panel-content color="foreground" class="mt-5">
-              <transition-group
-                name="slide"
-                enter-active-class="animated fadeInLeft fast-anim"
-                leave-active-class="animated fadeOutLeft fast-anim"
-              >
-                <v-row v-for="(item, index) in app.command" :key="index">
-                  <v-col>
-                      <v-text-field
-                        :label="'Command ' + index + ':'"
-                        v-model="app.command[index]"
-                        required
-                      ></v-text-field>
-                  </v-col>
-                  <v-col class="d-flex justify-end" cols="1">
-                    <v-btn
-                      icon
-                      class="align-self-center"
-                      @click="removeCommand(index)"
-                    >
-                      <v-icon>mdi-minus</v-icon>
-                    </v-btn>
-                  </v-col>
-                </v-row>
-              </transition-group>
-              <v-row>
-                <v-col cols="12" class="d-flex justify-end">
-                  <v-btn icon class="align-self-center" @click="addCommand">
-                    <v-icon>mdi-plus</v-icon>
+            <transition-group
+              name="slide"
+              enter-active-class="animated fadeInLeft fast-anim"
+              leave-active-class="animated fadeOutLeft fast-anim"
+            >
+              <v-row v-for="(item, index) in app.command" :key="index">
+                <v-col>
+                  <v-text-field
+                    :label="'Command ' + index + ':'"
+                    v-model="app.command[index]"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col class="d-flex justify-end" cols="1">
+                  <v-btn
+                    icon
+                    class="align-self-center"
+                    @click="removeCommand(index)"
+                  >
+                    <v-icon>mdi-minus</v-icon>
                   </v-btn>
                 </v-col>
               </v-row>
+            </transition-group>
+            <v-row>
+              <v-col cols="12" class="d-flex justify-end">
+                <v-btn icon class="align-self-center" @click="addCommand">
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
@@ -65,44 +65,44 @@
             </v-row>
           </v-expansion-panel-header>
           <v-expansion-panel-content color="foreground">
-              <transition-group
-                name="slide"
-                enter-active-class="animated fadeInLeft fast-anim"
-                leave-active-class="animated fadeOutLeft fast-anim"
-              >
-                <v-row v-for="(item, index) in app.devices" :key="index">
-                  <v-col>
-                      <v-text-field
-                        label="Container"
-                        v-model="item['container']"
-                        required
-                      ></v-text-field>
-                  </v-col>
-                  <v-col>
-                      <v-text-field
-                        label="Host"
-                        v-model="item['host']"
-                        required
-                      ></v-text-field>
-                  </v-col>
-                  <v-col class="d-flex justify-end" cols="1">
-                    <v-btn
-                      icon
-                      class="align-self-center"
-                      @click="removeDevices(index)"
-                    >
-                      <v-icon>mdi-minus</v-icon>
-                    </v-btn>
-                  </v-col>
-                </v-row>
-              </transition-group>
-              <v-row>
-                <v-col cols="12" class="d-flex justify-end">
-                  <v-btn icon class="align-self-center" @click="addDevices">
-                    <v-icon>mdi-plus</v-icon>
+            <transition-group
+              name="slide"
+              enter-active-class="animated fadeInLeft fast-anim"
+              leave-active-class="animated fadeOutLeft fast-anim"
+            >
+              <v-row v-for="(item, index) in app.devices" :key="index">
+                <v-col>
+                  <v-text-field
+                    label="Container"
+                    v-model="item['container']"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    label="Host"
+                    v-model="item['host']"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col class="d-flex justify-end" cols="1">
+                  <v-btn
+                    icon
+                    class="align-self-center"
+                    @click="removeDevices(index)"
+                  >
+                    <v-icon>mdi-minus</v-icon>
                   </v-btn>
                 </v-col>
               </v-row>
+            </transition-group>
+            <v-row>
+              <v-col cols="12" class="d-flex justify-end">
+                <v-btn icon class="align-self-center" @click="addDevices">
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
@@ -115,49 +115,49 @@
             </v-row>
           </v-expansion-panel-header>
           <v-expansion-panel-content color="foreground">
-              <transition-group
-                name="slide"
-                enter-active-class="animated fadeInLeft fast-anim"
-                leave-active-class="animated fadeOutLeft fast-anim"
-              >
-                <v-row v-for="(item, index) in app.labels" :key="index">
-                  <v-col>
-                      <v-text-field
-                        label="Label"
-                        v-model="item['label']"
-                        required
-                      ></v-text-field>
-                  </v-col>
-                  <v-col>
-                      <v-text-field
-                        label="Value"
-                        v-model="item['value']"
-                      ></v-text-field>
-                  </v-col>
-                  <v-col>
-                      <v-text-field
-                        label="Variable"
-                        v-model="item['variable']"
-                      ></v-text-field>
-                  </v-col>
-                  <v-col class="d-flex justify-end" cols="1">
-                    <v-btn
-                      icon
-                      class="align-self-center"
-                      @click="removeLabels(index)"
-                    >
-                      <v-icon>mdi-minus</v-icon>
-                    </v-btn>
-                  </v-col>
-                </v-row>
-              </transition-group>
-              <v-row>
-                <v-col cols="12" class="d-flex justify-end">
-                  <v-btn icon class="align-self-center" @click="addLabels">
-                    <v-icon>mdi-plus</v-icon>
+            <transition-group
+              name="slide"
+              enter-active-class="animated fadeInLeft fast-anim"
+              leave-active-class="animated fadeOutLeft fast-anim"
+            >
+              <v-row v-for="(item, index) in app.labels" :key="index">
+                <v-col>
+                  <v-text-field
+                    label="Label"
+                    v-model="item['label']"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    label="Value"
+                    v-model="item['value']"
+                  ></v-text-field>
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    label="Variable"
+                    v-model="item['variable']"
+                  ></v-text-field>
+                </v-col>
+                <v-col class="d-flex justify-end" cols="1">
+                  <v-btn
+                    icon
+                    class="align-self-center"
+                    @click="removeLabels(index)"
+                  >
+                    <v-icon>mdi-minus</v-icon>
                   </v-btn>
                 </v-col>
               </v-row>
+            </transition-group>
+            <v-row>
+              <v-col cols="12" class="d-flex justify-end">
+                <v-btn icon class="align-self-center" @click="addLabels">
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
@@ -168,46 +168,44 @@
             </v-row>
           </v-expansion-panel-header>
           <v-expansion-panel-content color="foreground">
-              <transition-group
-                name="slide"
-                enter-active-class="animated fadeInLeft fast-anim"
-                leave-active-class="animated fadeOutLeft fast-anim"
-              >
-                <v-row v-for="(item, index) in app.sysctls" :key="index">
-                  <v-col>
-
-                      <v-text-field
-                        label="Name"
-                        v-model="item['name']"
-                        required
-                      ></v-text-field>
-                  </v-col>
-                  <v-col>
-
-                      <v-text-field
-                        label="Value"
-                        v-model="item['value']"
-                        required
-                      ></v-text-field>
-                  </v-col>
-                  <v-col class="d-flex justify-end" cols="1">
-                    <v-btn
-                      icon
-                      class="align-self-center"
-                      @click="removeSysctls(index)"
-                    >
-                      <v-icon>mdi-minus</v-icon>
-                    </v-btn>
-                  </v-col>
-                </v-row>
-              </transition-group>
-              <v-row>
-                <v-col cols="12" class="d-flex justify-end">
-                  <v-btn icon class="align-self-center" @click="addSysctls">
-                    <v-icon>mdi-plus</v-icon>
+            <transition-group
+              name="slide"
+              enter-active-class="animated fadeInLeft fast-anim"
+              leave-active-class="animated fadeOutLeft fast-anim"
+            >
+              <v-row v-for="(item, index) in app.sysctls" :key="index">
+                <v-col>
+                  <v-text-field
+                    label="Name"
+                    v-model="item['name']"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    label="Value"
+                    v-model="item['value']"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col class="d-flex justify-end" cols="1">
+                  <v-btn
+                    icon
+                    class="align-self-center"
+                    @click="removeSysctls(index)"
+                  >
+                    <v-icon>mdi-minus</v-icon>
                   </v-btn>
                 </v-col>
               </v-row>
+            </transition-group>
+            <v-row>
+              <v-col cols="12" class="d-flex justify-end">
+                <v-btn icon class="align-self-center" @click="addSysctls">
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
@@ -220,16 +218,16 @@
             </v-row></v-expansion-panel-header
           >
           <v-expansion-panel-content color="foreground">
-              <v-select
-                v-model="app['cap_add']"
-                :items="cap_options"
-                label="Add Capabilities"
-                multiple
-                hide-selected
-                clearable
-                chips
-                deletable-chips
-              />
+            <v-select
+              v-model="app['cap_add']"
+              :items="cap_options"
+              label="Add Capabilities"
+              multiple
+              hide-selected
+              clearable
+              chips
+              deletable-chips
+            />
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
@@ -242,17 +240,13 @@
             </v-row></v-expansion-panel-header
           >
           <v-expansion-panel-content color="foreground">
-              <v-text-field
-                v-model="app['cpus']"
-                label="CPU Cores:"
-                clearable
-              />
-              <v-text-field
-                v-model="app['mem_limit']"
-                label="Memory Limit:"
-                placeholder="(1000b,100k,10m,1g)"
-                clearable
-              />
+            <v-text-field v-model="app['cpus']" label="CPU Cores:" clearable />
+            <v-text-field
+              v-model="app['mem_limit']"
+              label="Memory Limit:"
+              placeholder="(1000b,100k,10m,1g)"
+              clearable
+            />
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -262,7 +256,7 @@
 
 <script>
 export default {
-  data(){
+  data() {
     return {
       cap_options: [
         "SYS_MODULE",
@@ -287,9 +281,9 @@ export default {
         "SYS_BOOT",
         "LEASE",
         "WAKE_ALARM",
-        "BLOCK_SUSPEND",
-      ],
-    }
+        "BLOCK_SUSPEND"
+      ]
+    };
   },
   props: ["app"],
   methods: {
@@ -316,7 +310,7 @@ export default {
     },
     removeSysctls(index) {
       this.app.sysctls.splice(index, 1);
-    },
-  },
+    }
+  }
 };
 </script>

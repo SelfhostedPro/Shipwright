@@ -39,10 +39,7 @@
         :key="'port-' + port_index"
       >
         <v-col cols="1">
-          <v-btn
-            class="removeButton ml-5"
-            icon
-            @click="removePort(port_index)"
+          <v-btn class="removeButton ml-5" icon @click="removePort(port_index)"
             ><v-icon>mdi-minus</v-icon></v-btn
           >
         </v-col>
@@ -91,7 +88,7 @@
 export default {
   data() {
     return {
-      network_modes: ["bridge", "none", "host"],
+      network_modes: ["bridge", "none", "host"]
     };
   },
   props: ["app"],
@@ -101,12 +98,12 @@ export default {
         label: "",
         hport: "",
         cport: "",
-        proto: "tcp",
+        proto: "tcp"
       });
     },
     removePort(port_index) {
       this.app.ports.splice(port_index, 1);
-    },
-  },
+    }
+  }
 };
 </script>
