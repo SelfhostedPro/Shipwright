@@ -81,7 +81,7 @@ export default {
     AppNetwork: AppNetwork,
     AppStorage: AppStorage,
     AppEnvironment: AppEnvironment,
-    AppAdvanced: AppAdvanced
+    AppAdvanced: AppAdvanced,
   },
   data() {
     return {
@@ -105,9 +105,9 @@ export default {
             devices: [],
             labels: [],
             sysctls: [],
-            cap_add: []
-          }
-        ]
+            cap_add: [],
+          },
+        ],
       },
       cap_options: [
         "SYS_MODULE",
@@ -132,26 +132,29 @@ export default {
         "SYS_BOOT",
         "LEASE",
         "WAKE_ALARM",
-        "BLOCK_SUSPEND"
-      ]
+        "BLOCK_SUSPEND",
+      ],
     };
   },
   methods: {
     addApp() {
       this.form.containers.push({
+        title: "",
         name: "",
         image: "",
-        logo: "",
+        description: "",
+        categories: [],
+        platform: "linux",
+        note: "",
         restart_policy: "",
         ports: [],
         volumes: [],
         env: [],
+        command: [],
         devices: [],
         labels: [],
         sysctls: [],
         cap_add: [],
-        mem_limit: "",
-        cpus: ""
       });
     },
     removeApp(index) {
@@ -182,14 +185,14 @@ export default {
             devices: [],
             labels: [],
             sysctls: [],
-            cap_add: []
-          }
-        ]
+            cap_add: [],
+          },
+        ],
       };
     },
     saveTemplate() {
       localStorage.setItem("Current Template", JSON.stringify(this.form));
-    }
+    },
   },
   beforeMount() {
     window.addEventListener("beforeUnload", this.saveTemplate);
@@ -202,7 +205,7 @@ export default {
     if (check_template) {
       this.form = await JSON.parse(check_template);
     }
-  }
+  },
 };
 </script>
 

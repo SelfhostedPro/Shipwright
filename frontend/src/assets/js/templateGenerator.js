@@ -89,7 +89,7 @@ function convVolumes(volumes, app) {
 function convPortainer(templateObject) {
   var portainerAppList = [];
   for (let app in templateObject.containers) {
-    templateObject.containers[app]["type"] = "1";
+    templateObject.containers[app]["type"] = 1;
     if (
       templateObject.containers[app].ports &&
       templateObject.containers[app].ports.length > 0
