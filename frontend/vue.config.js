@@ -1,3 +1,7 @@
 module.exports = {
-  transpileDependencies: ["vuetify"]
+  transpileDependencies: ["vuetify"],
+
+  pwa: {
+    name: 'Shipwright'
+  }
 };
