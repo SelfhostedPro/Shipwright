@@ -35,13 +35,27 @@
       </v-expansion-panels>
     </v-row>
     <v-row>
+      <v-btn
+        class="mt-10 ml-5"
+        color="error"
+        fab
+        @click="clearTemplate()"
+        ><v-icon>mdi-trash-can-outline</v-icon></v-btn
+      >
       <v-spacer/>
       <v-btn
-        class="mt-10 mr-10"
+        class="mt-10 mr-5"
         color="primary"
         fab
         @click="addApp()"
         ><v-icon>mdi-plus</v-icon></v-btn
+      >
+      <v-btn
+        class="mt-10 mr-5"
+        color="primary"
+        fab
+        @click="saveTemplate()"
+        ><v-icon>mdi-content-save-outline</v-icon></v-btn
       >
       <v-btn
         class="mt-10 mr-5"
@@ -55,6 +69,7 @@
 </template>
 
 <script>
+import {generateTemplate} from "@/assets/js/templateGenerator.js"
 import AppGeneral from "./app_components/app_general";
 import AppNetwork from "./app_components/app_networking";
 import AppStorage from "./app_components/app_storage";
@@ -78,6 +93,9 @@ export default {
             title: "",
             name: "",
             image: "",
+            categories: [],
+            platform: "linux",
+            note: "",
             restart_policy: "",
             ports: [],
             volumes: [],
@@ -139,9 +157,47 @@ export default {
       this.form.containers.splice(index, 1);
     },
     printForm() {
-      console.log(this.form);
+      console.log(JSON.stringify(this.form));
+      generateTemplate(this.form)
     },
+    clearTemplate(){
+      localStorage.removeItem("Current Template")
+      this.form = {
+        title: "",
+        containers: [
+          {
+            title: "",
+            name: "",
+            image: "",
+            restart_policy: "",
+            ports: [],
+            volumes: [],
+            env: [],
+            command: [],
+            devices: [],
+            labels: [],
+            sysctls: [],
+            cap_add: [],
+          },
+        ],
+      }
+    },
+    saveTemplate(){
+    localStorage.setItem("Current Template", JSON.stringify(this.form))
+    }
   },
+  beforeMount(){
+    window.addEventListener("beforeUnload", this.saveTemplate)
+  },
+  beforeDestroy(){
+    localStorage.setItem("Current Template", JSON.stringify(this.form))
+  },
+  async created(){
+    let check_template = await localStorage.getItem("Current Template")
+    if (check_template){
+      this.form = await JSON.parse(check_template)
+    }
+  }
 };
 </script>
 
