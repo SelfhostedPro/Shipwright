@@ -2,70 +2,80 @@ import JSZip from "jszip";
 import FileSaver from "file-saver";
 export function generateTemplate(templateObject) {
   // const title = templateObject.title
-  var yachtAppList = [];
-
   // Deep Clone templateObject so changing attributes here doesn't affect the form
-  var _templateObject = JSON.parse(JSON.stringify(templateObject));
-  for (let app in _templateObject.containers) {
-    if (
-      _templateObject.containers[app].ports &&
-      _templateObject.containers[app].ports.length > 0
-    ) {
-      _templateObject.containers[app].ports = convPorts(
-        _templateObject.containers[app].ports
-      );
-    }
-    if (
-      _templateObject.containers[app].volumes &&
-      _templateObject.containers[app].volumes.length > 0
-    ) {
-      _templateObject.containers[app].volumes = convVolumes(
-        _templateObject.containers[app].volumes
-      );
-    }
-    if (
-      _templateObject.containers[app].sysctls &&
-      _templateObject.containers[app].sysctls.length > 0
-    ) {
-      _templateObject.containers[app].sysctls = convSysctls(
-        _templateObject.containers[app].sysctls
-      );
-    }
-    yachtAppList.push(_templateObject.containers[app]);
-  }
+  var _yachtTemplateObject = JSON.parse(JSON.stringify(templateObject));
+  var _portainerTemplateObject = JSON.parse(JSON.stringify(templateObject));
+
+  let yachtAppList = convYacht(_yachtTemplateObject);
+  let portainerAppList = convPortainer(_portainerTemplateObject);
+  let portainerV2AppListApps = JSON.parse(JSON.stringify(portainerAppList));
+  let portainerV2Template = { version: "2", templates: portainerV2AppListApps };
+
   let zip = new JSZip();
   zip.file(
-    _templateObject.title + "-yacht.json",
+    _yachtTemplateObject.title + "-yacht.json",
     JSON.stringify(yachtAppList, null, 2)
   );
+  zip.file(
+    _portainerTemplateObject.title + "-portainer-v1.json",
+    JSON.stringify(portainerAppList, null, 2)
+  );
+  zip.file(
+    _portainerTemplateObject.title + "-portainer-v2.json",
+    JSON.stringify(portainerV2Template, null, 4)
+  );
   zip.generateAsync({ type: "blob" }).then(function(content) {
-    FileSaver.saveAs(content, _templateObject.title + ".zip");
+    FileSaver.saveAs(content, templateObject.title + ".zip");
   });
 }
 
-function convPorts(ports) {
+function convPorts(ports, app) {
   var _port_list = [];
   var _port_object = {};
-  for (let port in ports) {
-    if (ports[port].hport) {
-      _port_object[
-        ports[port].label
-      ] = `${ports[port].hport}:${ports[port].cport}/${ports[port].proto}`;
-    } else {
-      _port_object[
-        ports[port].label
-      ] = `${ports[port].cport}/${ports[port].proto}`;
+  if (app === "yacht") {
+    for (let port in ports) {
+      if (ports[port].hport) {
+        if (ports[port].label && ports[port].label.length > 0) {
+          _port_object[
+            ports[port].label
+          ] = `${ports[port].hport}:${ports[port].cport}/${ports[port].proto}`;
+        } else {
+          _port_list.push(
+            `${ports[port].hport}:${ports[port].cport}/${ports[port].proto}`
+          );
+        }
+      } else {
+        if (ports[port].label && ports[port].label.length > 0) {
+          _port_object[
+            ports[port].label
+          ] = `${ports[port].cport}/${ports[port].proto}`;
+        } else {
+          _port_list.push(`${ports[port].cport}/${ports[port].proto}`);
+        }
+      }
+    }
+  } else if (app === "portainer_v1") {
+    for (let port in ports) {
+      if (ports[port].hport) {
+        _port_list.push(
+          `${ports[port].hport}:${ports[port].cport}/${ports[port].proto}`
+        );
+      } else {
+        _port_list.push(`${ports[port].cport}/${ports[port].proto}`);
+      }
     }
   }
-  _port_list.push(_port_object);
+  if (_port_object && _port_object.length > 0) {
+    _port_list.push(_port_object);
+  }
   return _port_list;
 }
 
-function convVolumes(volumes) {
+function convVolumes(volumes, app) {
   var _volume_list = [];
   for (let volume in volumes) {
     let _volume = volumes[volume];
-    if (volumes[volume].variable) {
+    if (volumes[volume].variable && app == "yacht") {
       _volume.bind = volumes[volume].variable;
       delete _volume.variable;
     } else {
@@ -76,6 +86,82 @@ function convVolumes(volumes) {
   return _volume_list;
 }
 
+function convPortainer(templateObject) {
+  var portainerAppList = [];
+  for (let app in templateObject.containers) {
+    templateObject.containers[app]["type"] = "1";
+    if (
+      templateObject.containers[app].ports &&
+      templateObject.containers[app].ports.length > 0
+    ) {
+      templateObject.containers[app].ports = convPorts(
+        templateObject.containers[app].ports,
+        "portainer_v1"
+      );
+    }
+    if (
+      templateObject.containers[app].volumes &&
+      templateObject.containers[app].volumes.length > 0
+    ) {
+      templateObject.containers[app].volumes = convVolumes(
+        templateObject.containers[app].volumes,
+        "portainer_v1"
+      );
+    }
+    if (
+      templateObject.containers[app].sysctls &&
+      templateObject.containers[app].sysctls.length > 0
+    ) {
+      templateObject.containers[app].sysctls = convSysctls(
+        templateObject.containers[app].sysctls,
+        "portainer_v1"
+      );
+    }
+    console.log('Attributes = '+templateObject.containers[app])
+    for (let attribute in templateObject.containers[app]) {
+      if (templateObject.containers[app][attribute] === null || templateObject.containers[app][attribute] === undefined || templateObject.containers[app][attribute].length === 0) {
+        delete templateObject.containers[app][attribute]
+      }
+    }
+    console.log(templateObject.containers[app])
+    portainerAppList.push(templateObject.containers[app]);
+  }
+  return portainerAppList;
+}
+function convYacht(templateObject) {
+  var yachtAppList = [];
+  for (let app in templateObject.containers) {
+    if (
+      templateObject.containers[app].ports &&
+      templateObject.containers[app].ports.length > 0
+    ) {
+      templateObject.containers[app].ports = convPorts(
+        templateObject.containers[app].ports,
+        "yacht"
+      );
+    }
+    if (
+      templateObject.containers[app].volumes &&
+      templateObject.containers[app].volumes.length > 0
+    ) {
+      templateObject.containers[app].volumes = convVolumes(
+        templateObject.containers[app].volumes,
+        "yacht"
+      );
+    }
+    if (
+      templateObject.containers[app].sysctls &&
+      templateObject.containers[app].sysctls.length > 0
+    ) {
+      templateObject.containers[app].sysctls = convSysctls(
+        templateObject.containers[app].sysctls,
+        "yacht"
+      );
+    }
+    yachtAppList.push(templateObject.containers[app]);
+  }
+  return yachtAppList;
+}
 function convSysctls(sysctls) {
   var _sysctl_list = [];
   for (let sysctl in sysctls) {
