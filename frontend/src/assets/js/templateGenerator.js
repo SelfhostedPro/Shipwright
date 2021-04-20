@@ -1,11 +1,12 @@
+import JSZip from "jszip";
+import FileSaver from "file-saver";
 export function generateTemplate(templateObject) {
   // const title = templateObject.title
-  // var appList = []
+  var yachtAppList = [];
 
   // Deep Clone templateObject so changing attributes here doesn't affect the form
   var _templateObject = JSON.parse(JSON.stringify(templateObject));
   for (let app in _templateObject.containers) {
-    //   console.log(JSON.stringify(_templateObject.containers[app].env))
     if (
       _templateObject.containers[app].ports &&
       _templateObject.containers[app].ports.length > 0
@@ -30,8 +31,13 @@ export function generateTemplate(templateObject) {
         _templateObject.containers[app].sysctls
       );
     }
+    yachtAppList.push(_templateObject.containers[app]);
   }
-  //   console.log(JSON.stringify(_templateObject))
+  let zip = new JSZip();
+  zip.file(_templateObject.title + "-yacht.json", JSON.stringify(yachtAppList, null, 2));
+  zip.generateAsync({ type: "blob" }).then(function(content) {
+    FileSaver.saveAs(content, _templateObject.title+ ".zip");
+  });
 }
 
 function convPorts(ports) {
@@ -68,15 +74,13 @@ function convVolumes(volumes) {
 }
 
 function convSysctls(sysctls) {
-  var _sysctl_list = []
+  var _sysctl_list = [];
   for (let sysctl in sysctls) {
-    console.log(sysctls[sysctl]);
-    let _sysctl_object = {}
-    let _sysctl_name = sysctls[sysctl].name
-    let _sysctl_value = sysctls[sysctl].value
-    _sysctl_object[_sysctl_name] = _sysctl_value
-    _sysctl_list.push(_sysctl_object)
+    let _sysctl_object = {};
+    let _sysctl_name = sysctls[sysctl].name;
+    let _sysctl_value = sysctls[sysctl].value;
+    _sysctl_object[_sysctl_name] = _sysctl_value;
+    _sysctl_list.push(_sysctl_object);
   }
-  console.log(JSON.stringify(_sysctl_list))
-  return _sysctl_list
+  return _sysctl_list;
 }

@@ -37,6 +37,7 @@
         v-model="app.image"
         required
       />
+      <v-textarea label="Description" v-model="app.description" clearable no-resize rows="2"/>
       <v-combobox label="Categories" placeholder="Downloads" small-chips v-model="app.categories" multiple/>
       <v-text-field
         label="Platform"
