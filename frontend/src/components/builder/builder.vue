@@ -2,11 +2,11 @@
   <div class="mt-3">
     <v-row justify="center">
       <v-card>
-        <v-card-title class="ml-10">
-          Ship Builder
+        <v-card-title class="ml-5">
+          Builder
         </v-card-title>
         <v-card-text class="ml-5">
-          Welcome to Ship Builder. You can use this tool to generate templates for Portainer and Yacht. This is still a work in progress so there may be some bugs here or there.
+          Welcome to the Shipwright Builder! You can use this tool to generate templates for <del>Portainer</del> and Yacht. This is still a work in progress so there may be some bugs here or there.
         </v-card-text>
         <v-text-field style="width: 50%;" class="ml-10" v-model="form.title" label="Template Title" />
       <v-expansion-panels :value="0">

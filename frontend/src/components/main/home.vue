@@ -12,7 +12,7 @@
 
       <v-col class="mb-4">
         <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to Shipmaster
+          Welcome to Shipwright
         </h1>
 
         <p class="subheading font-weight-regular">
@@ -23,7 +23,7 @@
             <v-btn color="primary" class="mr-5" :to="{ name: 'builder' }">
               Get Started
             </v-btn>
-            <v-btn class="ml-5">
+            <v-btn href="https://github.com/SelfhostedPro/Shipwright" target="_blank" class="ml-5">
               View Source Code
             </v-btn>
           </v-col>
