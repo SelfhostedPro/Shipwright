@@ -7,7 +7,9 @@ export function generateTemplate(templateObject) {
   var _portainerTemplateObject = JSON.parse(JSON.stringify(templateObject));
 
   let yachtAppList = convYacht(_yachtTemplateObject);
+  console.log(yachtAppList)
   let portainerAppList = convPortainer(_portainerTemplateObject);
+  console.log(portainerAppList)
   let portainerV2AppListApps = JSON.parse(JSON.stringify(portainerAppList));
   let portainerV2Template = { version: "2", templates: portainerV2AppListApps };
 
@@ -24,6 +26,10 @@ export function generateTemplate(templateObject) {
     _portainerTemplateObject.title + "-portainer-v2.json",
     JSON.stringify(portainerV2Template, null, 4)
   );
+  zip.file(
+    templateObject.title + "-export.json",
+    JSON.stringify(templateObject, null, 2)
+  )
   zip.generateAsync({ type: "blob" }).then(function(content) {
     FileSaver.saveAs(content, templateObject.title + ".zip");
   });
@@ -31,14 +37,18 @@ export function generateTemplate(templateObject) {
 
 function convPorts(ports, app) {
   var _port_list = [];
-  var _port_object = {};
+  // Convert ports for Yacht
   if (app === "yacht") {
     for (let port in ports) {
+      // If host port then you need to include that
       if (ports[port].hport) {
+        // If there's a label make sure to convert it to an object
         if (ports[port].label && ports[port].label.length > 0) {
+          let _port_object = {}
           _port_object[
             ports[port].label
           ] = `${ports[port].hport}:${ports[port].cport}/${ports[port].proto}`;
+          _port_list.push(_port_object)
         } else {
           _port_list.push(
             `${ports[port].hport}:${ports[port].cport}/${ports[port].proto}`
@@ -46,9 +56,11 @@ function convPorts(ports, app) {
         }
       } else {
         if (ports[port].label && ports[port].label.length > 0) {
+          let _port_object = {}
           _port_object[
             ports[port].label
           ] = `${ports[port].cport}/${ports[port].proto}`;
+          _port_list.push(_port_object)
         } else {
           _port_list.push(`${ports[port].cport}/${ports[port].proto}`);
         }
@@ -64,9 +76,6 @@ function convPorts(ports, app) {
         _port_list.push(`${ports[port].cport}/${ports[port].proto}`);
       }
     }
-  }
-  if (_port_object && _port_object.length > 0) {
-    _port_list.push(_port_object);
   }
   return _port_list;
 }
@@ -117,13 +126,11 @@ function convPortainer(templateObject) {
         "portainer_v1"
       );
     }
-    console.log('Attributes = '+templateObject.containers[app])
     for (let attribute in templateObject.containers[app]) {
       if (templateObject.containers[app][attribute] === null || templateObject.containers[app][attribute] === undefined || templateObject.containers[app][attribute].length === 0) {
         delete templateObject.containers[app][attribute]
       }
     }
-    console.log(templateObject.containers[app])
     portainerAppList.push(templateObject.containers[app]);
   }
   return portainerAppList;
@@ -135,6 +142,7 @@ function convYacht(templateObject) {
       templateObject.containers[app].ports &&
       templateObject.containers[app].ports.length > 0
     ) {
+
       templateObject.containers[app].ports = convPorts(
         templateObject.containers[app].ports,
         "yacht"

@@ -33,7 +33,7 @@
                 </v-col>
                 <v-col cols="1">{{ app.name || "App " + index }}</v-col>
                 <v-col cols="2" class="text--secondary">
-                  ({{ app.image || "No Image" }})
+                  {{ app.image || "No Image" }}
                 </v-col>
               </v-row>
             </v-expansion-panel-header>
@@ -54,6 +54,55 @@
       <v-btn class="mt-10 ml-5" color="error" fab @click="clearTemplate()"
         ><v-icon>mdi-trash-can-outline</v-icon></v-btn
       >
+      <v-dialog
+        v-model="importDialog"
+        max-width="400"
+        transition="dialog-bottom-transition"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn class="mt-10 ml-5" color="error" fab v-bind="attrs" v-on="on"
+            ><v-icon>mdi-archive-arrow-up-outline</v-icon></v-btn
+          >
+        </template>
+        <v-card style="overflow: hidden;">
+          <v-row>
+            <v-col cols="1">
+          <v-btn @click="importDialog=false;" icon class="mt-2">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+            </v-col>
+            <v-col>
+          <v-tabs v-model="importTab">
+            <v-tab>
+              Shipwright
+            </v-tab>
+            <v-tab>
+              Portainer
+            </v-tab>
+            <v-tab>
+              Other
+            </v-tab>
+          </v-tabs>
+          </v-col>
+          </v-row>
+          <v-tabs-items v-model="importTab">
+            <v-tab-item>
+              <ShipwrightImport v-bind:form="form" v-on:import="importTemplate($event); importDialog=false" />
+            </v-tab-item>
+            <v-tab-item>
+              <PortainerImport v-bind:form="form" v-on:import="importTemplate($event); importDialog=false" />
+            </v-tab-item>
+            <v-tab-item>
+              <v-card-title>
+                Comming Soon!
+              </v-card-title>
+              <v-card-text>
+                Other types of imports are coming soon!
+              </v-card-text>
+            </v-tab-item>
+          </v-tabs-items>
+        </v-card>
+      </v-dialog>
       <v-spacer />
       <v-btn class="mt-10 mr-5" color="primary" fab @click="addApp()"
         ><v-icon>mdi-plus</v-icon></v-btn
@@ -69,7 +118,13 @@
 </template>
 
 <script>
+// Import Functions
 import { generateTemplate } from "@/assets/js/templateGenerator.js";
+// Import Components
+import ShipwrightImport from "./import_components/import_export";
+import PortainerImport from "./import_components/import_portainer";
+
+// Form Components
 import AppGeneral from "./app_components/app_general";
 import AppNetwork from "./app_components/app_networking";
 import AppStorage from "./app_components/app_storage";
@@ -82,10 +137,14 @@ export default {
     AppStorage: AppStorage,
     AppEnvironment: AppEnvironment,
     AppAdvanced: AppAdvanced,
+    ShipwrightImport: ShipwrightImport,
+    PortainerImport: PortainerImport,
   },
   data() {
     return {
       e6: 1,
+      importDialog: false,
+      importTab: 0,
       form: {
         title: "",
         containers: [
@@ -157,11 +216,14 @@ export default {
         cap_add: [],
       });
     },
+    importTemplate: function (template){
+      this.form = template
+      localStorage.setItem("Current Template", JSON.stringify(this.form))
+    },
     removeApp(index) {
       this.form.containers.splice(index, 1);
     },
     printForm() {
-      console.log(JSON.stringify(this.form));
       generateTemplate(this.form);
     },
     clearTemplate() {
@@ -209,18 +271,7 @@ export default {
 };
 </script>
 
-<style scoped>
-.actionButton {
-  position: absolute;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
-.removeButton {
-  top: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
+<style>
 html {
   background-color: black;
 }
