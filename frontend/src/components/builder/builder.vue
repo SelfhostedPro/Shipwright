@@ -1,7 +1,8 @@
 <template>
   <div class="mt-3">
+    <v-card>
     <v-row justify="center">
-      <v-card>
+      <v-card class="pb-5" style="max-width:95%;">
         <v-card-title class="ml-5">
           Builder
         </v-card-title>
@@ -16,7 +17,7 @@
           v-model="form.title"
           label="Template Title"
         />
-        <v-expansion-panels :value="0">
+        <v-expansion-panels accordion style="max-width:90%; margin-left: auto; margin-right: auto;" :value="0">
           <v-expansion-panel
             v-for="(app, index) in form.containers"
             :key="'app-' + index"
@@ -31,8 +32,8 @@
                 <v-col cols="1" v-if="app.logo">
                   <img style="max-height: 20px;" :src="app.logo" />
                 </v-col>
-                <v-col cols="1">{{ app.name || "App " + index }}</v-col>
-                <v-col cols="2" class="text--secondary">
+                <v-col cols="2">{{ app.title || "App " + index }}</v-col>
+                <v-col cols="8" class="text--secondary">
                   {{ app.image || "No Image" }}
                 </v-col>
               </v-row>
@@ -51,7 +52,7 @@
       </v-card>
     </v-row>
     <v-row>
-      <v-btn class="mt-10 ml-5" color="error" fab @click="clearTemplate()"
+      <v-btn class="my-5 ml-5" color="error" fab @click="clearTemplate()"
         ><v-icon>mdi-trash-can-outline</v-icon></v-btn
       >
       <v-dialog
@@ -60,7 +61,7 @@
         transition="dialog-bottom-transition"
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn class="mt-10 ml-5" color="error" fab v-bind="attrs" v-on="on"
+          <v-btn class="my-5 ml-5" color="error" fab v-bind="attrs" v-on="on"
             ><v-icon>mdi-archive-arrow-up-outline</v-icon></v-btn
           >
         </template>
@@ -104,16 +105,17 @@
         </v-card>
       </v-dialog>
       <v-spacer />
-      <v-btn class="mt-10 mr-5" color="primary" fab @click="addApp()"
+      <v-btn class="my-5 mr-5" color="primary" fab @click="addApp()"
         ><v-icon>mdi-plus</v-icon></v-btn
       >
-      <v-btn class="mt-10 mr-5" color="primary" fab @click="saveTemplate()"
+      <v-btn class="my-5 mr-5" color="primary" fab @click="saveTemplate()"
         ><v-icon>mdi-content-save-outline</v-icon></v-btn
       >
-      <v-btn class="mt-10 mr-5" color="primary" fab @click="printForm()"
+      <v-btn class="my-5 mr-5" color="primary" fab @click="printForm()"
         ><v-icon>mdi-check</v-icon></v-btn
       >
     </v-row>
+    </v-card>
   </div>
 </template>
 
