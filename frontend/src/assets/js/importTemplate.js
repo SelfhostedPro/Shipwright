@@ -79,7 +79,8 @@ function portainerPorts(ports){
 
 function portainerV2Conversion(_templateContent){
     let templateContent = _templateContent['templates']
-    portainerV1Conversion(templateContent)
+    let converted_template = portainerV1Conversion(templateContent)
+    return converted_template
 }
 
 
