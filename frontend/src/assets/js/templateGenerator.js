@@ -7,9 +7,7 @@ export function generateTemplate(templateObject) {
   var _portainerTemplateObject = JSON.parse(JSON.stringify(templateObject));
 
   let yachtAppList = convYacht(_yachtTemplateObject);
-  console.log(yachtAppList)
   let portainerAppList = convPortainer(_portainerTemplateObject);
-  console.log(portainerAppList)
   let portainerV2AppListApps = JSON.parse(JSON.stringify(portainerAppList));
   let portainerV2Template = { version: "2", templates: portainerV2AppListApps };
 
