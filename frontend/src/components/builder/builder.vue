@@ -8,7 +8,7 @@
         </v-card-title>
         <v-card-text class="ml-5">
           Welcome to the Shipwright Builder! You can use this tool to generate
-          templates for <del>Portainer</del> and Yacht. This is still a work in
+          templates for Portainer and Yacht. This is still a work in
           progress so there may be some bugs here or there.
         </v-card-text>
         <v-text-field
