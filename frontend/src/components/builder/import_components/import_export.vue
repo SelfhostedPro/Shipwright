@@ -5,7 +5,7 @@
     </v-card-title>
     <v-card-text>
       Upload your export.json from a previous Shipwright template export.
-      <br/>
+      <br />
       <b>Warning:</b> The form will be cleared when you do this.
     </v-card-text>
     <v-file-input
@@ -37,29 +37,29 @@ import { importTemplate } from "@/assets/js/importTemplate.js";
 export default {
   data() {
     return {
-      importFile: null,
+      importFile: null
     };
   },
   model: {
-      prop: 'form',
-      event: 'import'
+    prop: "form",
+    event: "import"
   },
   props: ["form"],
   methods: {
     async _importTemplate(templateFile) {
       this.parentForm = await importTemplate(templateFile);
       localStorage.setItem("Current Template", JSON.stringify(this.parentForm));
-    },
+    }
   },
   computed: {
-      parentForm: {
-          get: function() {
-              return this.form
-          },
-          set: function(value){
-              this.$emit('import', value)
-          }
+    parentForm: {
+      get: function() {
+        return this.form;
+      },
+      set: function(value) {
+        this.$emit("import", value);
       }
+    }
   }
 };
 </script>

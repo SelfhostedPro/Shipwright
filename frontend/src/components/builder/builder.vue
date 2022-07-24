@@ -1,120 +1,136 @@
 <template>
   <div class="mt-3">
     <v-card>
-    <v-row justify="center">
-      <v-card class="pb-5" style="max-width:95%;">
-        <v-card-title class="ml-5">
-          Builder
-        </v-card-title>
-        <v-card-text class="ml-5">
-          Welcome to the Shipwright Builder! You can use this tool to generate
-          templates for Portainer and Yacht. This is still a work in
-          progress so there may be some bugs here or there.
-        </v-card-text>
-        <v-text-field
-          style="width: 50%;"
-          class="ml-10"
-          v-model="form.title"
-          label="Template Title"
-        />
-        <v-expansion-panels accordion style="max-width:90%; margin-left: auto; margin-right: auto;" :value="0">
-          <v-expansion-panel
-            v-for="(app, index) in form.containers"
-            :key="'app-' + index"
+      <v-row justify="center">
+        <v-card class="pb-5" style="max-width:95%;">
+          <v-card-title class="ml-5">
+            Builder
+          </v-card-title>
+          <v-card-text class="ml-5">
+            Welcome to the Shipwright Builder! You can use this tool to generate
+            templates for Portainer and Yacht. This is still a work in progress
+            so there may be some bugs here or there.
+          </v-card-text>
+          <v-text-field
+            style="width: 50%;"
+            class="ml-10"
+            v-model="form.title"
+            label="Template Title"
+          />
+          <v-expansion-panels
+            accordion
+            style="max-width:90%; margin-left: auto; margin-right: auto;"
+            :value="0"
           >
-            <v-expansion-panel-header color="secondary">
-              <v-row no-gutters style="max-height: 20px;">
-                <v-col cols="1"
-                  ><v-btn icon color="red" x-small @click="removeApp(index)"
-                    ><v-icon>mdi-minus</v-icon></v-btn
-                  >
-                </v-col>
-                <v-col cols="1" v-if="app.logo">
-                  <img style="max-height: 20px;" :src="app.logo" />
-                </v-col>
-                <v-col cols="2">{{ app.title || "App " + index }}</v-col>
-                <v-col cols="8" class="text--secondary">
-                  {{ app.image || "No Image" }}
-                </v-col>
-              </v-row>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content color="secondary">
-              <v-expansion-panels>
-                <AppGeneral :app="app" />
-                <AppNetwork :app="app" />
-                <AppStorage :app="app" />
-                <AppEnvironment :app="app" />
-                <AppAdvanced :app="app" />
-              </v-expansion-panels>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </v-card>
-    </v-row>
-    <v-row>
-      <v-btn class="my-5 ml-5" color="error" fab @click="clearTemplate()"
-        ><v-icon>mdi-trash-can-outline</v-icon></v-btn
-      >
-      <v-dialog
-        v-model="importDialog"
-        max-width="400"
-        transition="dialog-bottom-transition"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn class="my-5 ml-5" color="error" fab v-bind="attrs" v-on="on"
-            ><v-icon>mdi-archive-arrow-up-outline</v-icon></v-btn
-          >
-        </template>
-        <v-card style="overflow: hidden;">
-          <v-row>
-            <v-col cols="1">
-          <v-btn @click="importDialog=false;" icon class="mt-2">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-            </v-col>
-            <v-col>
-          <v-tabs v-model="importTab">
-            <v-tab>
-              Shipwright
-            </v-tab>
-            <v-tab>
-              Portainer
-            </v-tab>
-            <v-tab>
-              Other
-            </v-tab>
-          </v-tabs>
-          </v-col>
-          </v-row>
-          <v-tabs-items v-model="importTab">
-            <v-tab-item>
-              <ShipwrightImport v-bind:form="form" v-on:import="importTemplate($event); importDialog=false" />
-            </v-tab-item>
-            <v-tab-item>
-              <PortainerImport v-bind:form="form" v-on:import="importTemplate($event); importDialog=false" />
-            </v-tab-item>
-            <v-tab-item>
-              <v-card-title>
-                Comming Soon!
-              </v-card-title>
-              <v-card-text>
-                Other types of imports are coming soon!
-              </v-card-text>
-            </v-tab-item>
-          </v-tabs-items>
+            <v-expansion-panel
+              v-for="(app, index) in form.containers"
+              :key="'app-' + index"
+            >
+              <v-expansion-panel-header color="secondary">
+                <v-row no-gutters style="max-height: 20px;">
+                  <v-col cols="1"
+                    ><v-btn icon color="red" x-small @click="removeApp(index)"
+                      ><v-icon>mdi-minus</v-icon></v-btn
+                    >
+                  </v-col>
+                  <v-col cols="1" v-if="app.logo">
+                    <img style="max-height: 20px;" :src="app.logo" />
+                  </v-col>
+                  <v-col cols="2">{{ app.title || "App " + index }}</v-col>
+                  <v-col cols="8" class="text--secondary">
+                    {{ app.image || "No Image" }}
+                  </v-col>
+                </v-row>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content color="secondary">
+                <v-expansion-panels>
+                  <AppGeneral :app="app" />
+                  <AppNetwork :app="app" />
+                  <AppStorage :app="app" />
+                  <AppEnvironment :app="app" />
+                  <AppAdvanced :app="app" />
+                </v-expansion-panels>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
         </v-card>
-      </v-dialog>
-      <v-spacer />
-      <v-btn class="my-5 mr-5" color="primary" fab @click="addApp()"
-        ><v-icon>mdi-plus</v-icon></v-btn
-      >
-      <v-btn class="my-5 mr-5" color="primary" fab @click="saveTemplate()"
-        ><v-icon>mdi-content-save-outline</v-icon></v-btn
-      >
-      <v-btn class="my-5 mr-5" color="primary" fab @click="printForm()"
-        ><v-icon>mdi-check</v-icon></v-btn
-      >
-    </v-row>
+      </v-row>
+      <v-row>
+        <v-btn class="my-5 ml-5" color="error" fab @click="clearTemplate()"
+          ><v-icon>mdi-trash-can-outline</v-icon></v-btn
+        >
+        <v-dialog
+          v-model="importDialog"
+          max-width="400"
+          transition="dialog-bottom-transition"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn class="my-5 ml-5" color="error" fab v-bind="attrs" v-on="on"
+              ><v-icon>mdi-archive-arrow-up-outline</v-icon></v-btn
+            >
+          </template>
+          <v-card style="overflow: hidden;">
+            <v-row>
+              <v-col cols="1">
+                <v-btn @click="importDialog = false" icon class="mt-2">
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+              </v-col>
+              <v-col>
+                <v-tabs v-model="importTab">
+                  <v-tab>
+                    Shipwright
+                  </v-tab>
+                  <v-tab>
+                    Portainer
+                  </v-tab>
+                  <v-tab>
+                    Other
+                  </v-tab>
+                </v-tabs>
+              </v-col>
+            </v-row>
+            <v-tabs-items v-model="importTab">
+              <v-tab-item>
+                <ShipwrightImport
+                  v-bind:form="form"
+                  v-on:import="
+                    importTemplate($event);
+                    importDialog = false;
+                  "
+                />
+              </v-tab-item>
+              <v-tab-item>
+                <PortainerImport
+                  v-bind:form="form"
+                  v-on:import="
+                    importTemplate($event);
+                    importDialog = false;
+                  "
+                />
+              </v-tab-item>
+              <v-tab-item>
+                <v-card-title>
+                  Comming Soon!
+                </v-card-title>
+                <v-card-text>
+                  Other types of imports are coming soon!
+                </v-card-text>
+              </v-tab-item>
+            </v-tabs-items>
+          </v-card>
+        </v-dialog>
+        <v-spacer />
+        <v-btn class="my-5 mr-5" color="primary" fab @click="addApp()"
+          ><v-icon>mdi-plus</v-icon></v-btn
+        >
+        <v-btn class="my-5 mr-5" color="primary" fab @click="saveTemplate()"
+          ><v-icon>mdi-content-save-outline</v-icon></v-btn
+        >
+        <v-btn class="my-5 mr-5" color="primary" fab @click="printForm()"
+          ><v-icon>mdi-check</v-icon></v-btn
+        >
+      </v-row>
     </v-card>
   </div>
 </template>
@@ -140,7 +156,7 @@ export default {
     AppEnvironment: AppEnvironment,
     AppAdvanced: AppAdvanced,
     ShipwrightImport: ShipwrightImport,
-    PortainerImport: PortainerImport,
+    PortainerImport: PortainerImport
   },
   data() {
     return {
@@ -166,9 +182,9 @@ export default {
             devices: [],
             labels: [],
             sysctls: [],
-            cap_add: [],
-          },
-        ],
+            cap_add: []
+          }
+        ]
       },
       cap_options: [
         "SYS_MODULE",
@@ -193,8 +209,8 @@ export default {
         "SYS_BOOT",
         "LEASE",
         "WAKE_ALARM",
-        "BLOCK_SUSPEND",
-      ],
+        "BLOCK_SUSPEND"
+      ]
     };
   },
   methods: {
@@ -215,12 +231,12 @@ export default {
         devices: [],
         labels: [],
         sysctls: [],
-        cap_add: [],
+        cap_add: []
       });
     },
-    importTemplate: function (template){
-      this.form = template
-      localStorage.setItem("Current Template", JSON.stringify(this.form))
+    importTemplate: function(template) {
+      this.form = template;
+      localStorage.setItem("Current Template", JSON.stringify(this.form));
     },
     removeApp(index) {
       this.form.containers.splice(index, 1);
@@ -249,14 +265,14 @@ export default {
             devices: [],
             labels: [],
             sysctls: [],
-            cap_add: [],
-          },
-        ],
+            cap_add: []
+          }
+        ]
       };
     },
     saveTemplate() {
       localStorage.setItem("Current Template", JSON.stringify(this.form));
-    },
+    }
   },
   beforeMount() {
     window.addEventListener("beforeUnload", this.saveTemplate);
@@ -269,7 +285,7 @@ export default {
     if (check_template) {
       this.form = await JSON.parse(check_template);
     }
-  },
+  }
 };
 </script>
 
